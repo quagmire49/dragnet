@@ -1,127 +1,128 @@
-# AXON — Real-Time GPU Particle Dynamics & Fluid Simulation Engine
+# DRAGNET — Architecture-Agnostic Code Auditor & AntiSlop Triage Agent
 
-A high-performance WebGL graphics application demonstrating real-time GPGPU compute, mathematical signed distance fields (SDF), divergence-free curl noise advection, and Eulerian fluid dynamics running concurrently at 60 FPS in the browser.
-
----
-
-## 1. Executive Summary
-
-AXON is an experimental visual computing platform exploring the intersection of real-time particle physics, fluid dynamics, and implicit geometry. The engine simulates and renders **262,144 particles** entirely on the GPU using floating-point ping-pong render targets, driven by user interaction through an interactive cursor-coupled fluid velocity field.
-
-All physics integration, velocity advection, distance field evaluations, and sprite shading are executed in parallel via custom GLSL shaders, ensuring zero CPU overhead during runtime animation loops.
+> An intelligent, architecture-agnostic code auditor that sweeps repositories for security vulnerabilities, AI slop (including hallucinated packages and slopsquatting risks), structural coding gaps, and loose ends — ranking findings, explaining root causes, and synthesizing ready-to-apply diff patches.
 
 ---
 
-## 2. Mathematical & Algorithmic Architecture
+## Visual Tour
 
-### 2.1 GPGPU Ping-Pong Simulation Pipeline
-Traditional particle systems bound by CPU iteration become bottlenecked beyond thousands of points. AXON offloads the entire simulation state to floating-point texture buffers:
-* **Position Textures (`512 × 512` RGBA Float32):** Channels $(R, G, B)$ store the 3D world coordinates $(x, y, z)$; channel $A$ preserves lifecycle/phase attributes.
-* **Dual Render Targets:** Two `THREE.WebGLRenderTarget` instances (`rtPosA` and `rtPosB`) execute ping-pong computation every frame. The simulation shader reads from Target A and writes updated positions to Target B, followed by an immediate buffer swap.
+### 1. Landing & Command Interface
+A persistent WebGL GPGPU hero particle cloud (262,144 points) with interactive cursor fluid dynamics, pre-configured headline audit cards, and instantaneous repo ingestion.
 
-$$\mathbf{P}_{t+\Delta t} = \mathbf{P}_t + \mathbf{V}_{\text{total}} \cdot \Delta t$$
-
-### 2.2 Implicit Surface Geometry (Signed Distance Fields)
-The particle cloud is shaped by an organic, sculpted 3D toroidal geometry defined analytically through a Signed Distance Function $f(\mathbf{p}) \le 0$:
-1. **Depth Mirroring:**
-   $$p_z' = \sqrt{p_z^2 + 0.0215} - \sqrt{0.012}$$
-2. **Quaternion Rotation:** Coordinates are rotated into an asymmetric orientation via spatial quaternion transformation $q = (0.5, 0.5, 0.5, 0.5)$.
-3. **Restorative Normal Gradient:** The surface normal gradient $\nabla f(\mathbf{p})$ is calculated using central differences with step $\epsilon = 0.001$:
-   $$\nabla f(\mathbf{p}) \approx \frac{1}{2\epsilon} \begin{bmatrix} f(\mathbf{p} + \epsilon\hat{i}) - f(\mathbf{p} - \epsilon\hat{i}) \\ f(\mathbf{p} + \epsilon\hat{j}) - f(\mathbf{p} - \epsilon\hat{j}) \\ f(\mathbf{p} + \epsilon\hat{k}) - f(\mathbf{p} - \epsilon\hat{k}) \end{bmatrix}$$
-4. **Surface Attraction & Tangential Swirl:** Particles are pulled toward the implicit boundary while orbiting along the surface tangent:
-   $$\mathbf{V}_{\text{surface}} = -\nabla f(\mathbf{p}) \cdot f(\mathbf{p}) \cdot k_{\text{pull}} + (\hat{\mathbf{p}} \times \hat{\nabla f(\mathbf{p})}) \cdot k_{\text{swirl}}$$
-
-### 2.3 Divergence-Free Curl Noise Advection
-To achieve organic, turbulent motion without volume loss, the velocity field employs analytical curl noise derived from three overlapping sinusoidal potential fields $\mathbf{\Psi}(\mathbf{p})$:
-$$\mathbf{V}_{\text{curl}} = \nabla \times \mathbf{\Psi} = \begin{bmatrix} \frac{\partial \Psi_z}{\partial y} - \frac{\partial \Psi_y}{\partial z} \\ \frac{\partial \Psi_x}{\partial z} - \frac{\partial \Psi_z}{\partial x} \\ \frac{\partial \Psi_y}{\partial x} - \frac{\partial \Psi_x}{\partial y} \end{bmatrix}$$
-Because the divergence of a curl field is mathematically zero ($\nabla \cdot (\nabla \times \mathbf{\Psi}) \equiv 0$), particles disperse with fluid-like incompressibility.
-
-### 2.4 Cursor Fluid Coupling & Dissipation
-User interaction directly couples with the particle cloud:
-* The cursor trajectory is unprojected from viewport screen space onto the 3D interaction plane.
-* Velocity impulses $\mathbf{v}_{\text{cursor}}$ are injected into a localized radius around the pointer.
-* When stirred, particles undergo immediate momentum transfer, dispersing outward before decaying smoothly via an exponential damping function:
-  $$\mathbf{v}(t) = \mathbf{v}_0 \cdot e^{-\lambda t}$$
-  The restorative SDF spring pulls the particles back to the equilibrium surface within $1.5\text{–}2.0\text{ seconds}$.
-
-### 2.5 Additive Matcap Point Shading
-* Points are drawn using additive alpha blending (`THREE.AdditiveBlending`) with depth testing enabled and depth writing disabled to prevent occlusion artifacts.
-* Each sprite calculates view-dependent spherical falloff modulated by an embedded 64×64 soft matcap lighting map.
-* Point sizes scale dynamically with distance to camera:
-  $$\text{size} = k \cdot \text{DPR} \cdot \left(\frac{1000}{d_{\text{camera}}}\right)$$
+![Dragnet Landing Interface](./docs/screenshots/landing.png)
 
 ---
 
-## 3. System Architecture & Tech Stack
+### 2. Live Scan Stream Console
+Real-time Server-Sent Events (SSE) streaming abstract syntax tree (AST) traversal stages, language breakdowns, and staggered findings feeds with 2px severity-colored left borders.
 
-```
-axon/
-├── app/
-│   ├── layout.tsx         # Root document & application shell
-│   ├── page.tsx           # Main workspace & media viewport
-│   └── globals.css        # Base styling & viewport constraints
-├── components/
-│   └── AxonScene.tsx      # GPGPU ping-pong loop, WebGL shaders & gaze tracking
-├── lib/
-│   ├── matcap.ts          # Embedded 64x64 soft spherical matcap generator
-│   └── types.ts           # Core simulation & data interfaces
-└── public/                # Static assets & optimized build output
-```
+![Dragnet Live Scan Console](./docs/screenshots/scanning.png)
 
-| Layer | Technology | Role |
+---
+
+### 3. Executive Dashboard & Health Score
+Automated health score animation (0–100), monospace ASCII block breakdown bars (`[████████░░░░░░░░░░░░]`), hotspot density mapping, and one-click SARIF 2.1.0 / Markdown report exports.
+
+![Dragnet Executive Dashboard](./docs/screenshots/dashboard.png)
+
+---
+
+### 4. Interactive Remediation Drawer & Side-by-Side Diff
+Automated plain-English explanations, Slopsquatting risk detection (`"PACKAGE DOES NOT EXIST ON NPM/PYPI"`), and side-by-side git diff viewer with one-click `APPLY FIX` and `COPY PATCH` actions.
+
+![Dragnet Remediation Drawer](./docs/screenshots/drawer.png)
+
+---
+
+## Key Capabilities & Detection Engine
+
+| Category | Targeted Failure Modes | Detection Engine |
 | :--- | :--- | :--- |
-| **Framework** | Next.js 14 (App Router) | Client application container & SSR pre-rendering |
-| **Graphics API** | WebGL 2 / WebGL (`three@0.150.1`) | Low-level GPU pipeline & render target management |
-| **Shader Language** | GLSL (OpenGL Shading Language) | SIMD parallel computation of particle physics & shading |
-| **Language** | TypeScript | Strict type safety for coordinates, vectors & math utilities |
-| **Styling** | Tailwind CSS | Viewport layout & responsive positioning |
+| **Security** | Hardcoded AWS/Stripe API keys, SQL string concatenation, CORS wildcard credentials, unsafe deserialization | Gitleaks, Semgrep rules, AST inspection |
+| **AI Slop** | Hallucinated imports (slopsquatting risk), 30+ line copy-paste function duplicates, over-commented placeholder logic | AST parsing, PyPI & npm registry check (404 verification), Token-shingle hashing |
+| **Gaps** | Empty `except Exception: pass`, unhandled asynchronous promises, missing input boundary validation | Tree-sitter polyglot AST, static control flow analysis |
+| **Loose Ends** | Production `TODO`/`FIXME` stubs, empty function declarations, hardcoded localhost URLs, console logging of tokens | AST regex sweep, import graph analysis |
 
 ---
 
-## 4. Performance & Hardware Optimization
+## Flagship Feature: AntiSlop & Slopsquatting Detection
 
-* **Deterministic 60 FPS Execution:** All particle displacement operations run inside GPU fragment shaders across 262,144 parallel threads per simulation pass.
-* **Dynamic Resolution Scaling:** Automatically caps device pixel ratio at $\min(\text{DPR}, 2.0)$ to prevent overfill penalties on ultra-high-density mobile displays.
-* **Mobile Adaptation:** Devices with viewport widths $\le 760\text{ px}$ automatically downscale particle count to $16,384$ ($128 \times 128$ texture) to ensure thermal efficiency and steady 60 FPS on low-power mobile GPUs.
-* **Resource Cleanup:** Full memory disposal of WebGL render targets, textures, geometries, and shader materials on component unmount.
+Large Language Models frequently hallucinate package names that sound plausible (e.g., `fastjson_utils_pro`). Because these packages do not exist on public package registries, attackers register them to execute arbitrary code on build systems and developers' laptops (slopsquatting).
+
+Dragnet automatically:
+1. Traverses all `import` statements in the repository AST.
+2. Filters out known standard libraries.
+3. Queries public registries (`pypi.org` and `npmjs.org`) in real time.
+4. Alerts on `404 Not Found` statuses as **Critical Slopsquatting Risks** and synthesizes a safe drop-in replacement patch.
 
 ---
 
-## 5. Getting Started
+## Technical Architecture
+
+```
+dragnet/
+├── arena.json              # Hackathon submission metadata & entrypoints
+├── AI_LOG.md               # AI triage pipeline, prompt specifications & dev log
+├── README.md               # System documentation & architectural overview
+├── app/
+│   ├── layout.tsx          # Root layout mounting persistent GPGPU particle field
+│   ├── page.tsx            # Landing page with headline audit targets
+│   ├── scan/[id]/page.tsx  # Live streaming scan console & dashboard
+│   └── api/scan/           # SSE streaming, SARIF 2.1.0, and Markdown export endpoints
+├── components/
+│   ├── ParticleField.tsx   # 262,144-point GPGPU ping-pong & fluid simulation
+│   ├── LandingCards.tsx    # Spacious syntax-colored preview cards
+│   ├── LiveFeedCards.tsx   # Live findings stream with keyboard navigation
+│   ├── FindingDrawer.tsx   # Side-by-side diff viewer with automated patch application
+│   └── DashboardSummary.tsx# Monospace ASCII breakdown bars & hotspots
+├── backend/                # Standalone Python FastAPI detector engine
+│   ├── main.py             # FastAPI entrypoint & SSE event bus
+│   ├── pipeline.py         # Multi-detector orchestrator
+│   └── detectors/          # Secrets, deps (PyPI), rules, and loose ends
+└── demo-repos/             # Seeded repository demonstrating real-time detections
+```
+
+---
+
+## Mathematical & Visual Compute Highlights
+
+* **GPGPU Ping-Pong Simulation:** 262,144 concurrent particles simulated on the GPU using dual 32-bit floating-point textures (`512 × 512`), with zero CPU compute overhead.
+* **Signed Distance Fields (SDF):** Surface attraction based on analytical implicit torus geometry ($R=2.1, r=0.55$) with normal gradients computed via central differences.
+* **Divergence-Free Curl Noise:** Analytical curl potentials ($\nabla \cdot (\nabla \times \mathbf{\Psi}) \equiv 0$) driving volume-preserving turbulent advection.
+* **Eulerian Cursor Fluid Dynamics:** Pointer velocity impulses injected into the simulation grid; particles scatter and heal back to equilibrium within $1.5\text{–}2.0\text{ seconds}$.
+
+---
+
+## Quickstart & Local Execution
 
 ### Prerequisites
-* **Node.js:** v18.0.0 or higher
-* **npm:** v9.0.0 or higher (or pnpm / yarn)
-* A modern browser with WebGL 2 or WebGL with `OES_texture_float` support (Chrome, Edge, Safari, Firefox).
+* Node.js 18+ (tested on v20 & v22)
+* Modern browser with WebGL 2 support
 
-### Installation & Local Execution
+### Run Fullstack Web Application
+```bash
+# Clone the repository
+git clone https://github.com/quagmire49/dragnet.git
+cd dragnet
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/quagmire49/dragnet.git
-   cd dragnet
-   ```
+# Install dependencies
+npm install
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+# Run in production mode
+npm run build
+npm start
+```
+Visit **[http://localhost:3000](http://localhost:3000)** in your browser.
 
-3. **Run in development mode (with hot reloading):**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-4. **Production Build:**
-   ```bash
-   npm run build
-   npm start
-   ```
+### Keyboard Shortcuts
+* <kbd>j</kbd> / <kbd>k</kbd> — Navigate findings in feed
+* <kbd>/</kbd> — Focus findings search
+* <kbd>Enter</kbd> — Open finding detail drawer
+* <kbd>Esc</kbd> — Close drawer / modal
+* <kbd>Cmd</kbd> + <kbd>K</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> — Open cyber command palette
 
 ---
 
-## 6. License & Attribution
+## License
 
-Designed and engineered for real-time graphics research and high-performance interactive computing.
-All code and GLSL shaders are released under the MIT License.
+Released under the MIT License. Developed for the Mycrobo Hackathon — AntiSlop / AI Triage Track.

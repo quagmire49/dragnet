@@ -1,0 +1,27 @@
+{
+  "project_name": "DRAGNET",
+  "track": "AI triage",
+  "version": "1.0.0",
+  "repository": "https://github.com/quagmire49/dragnet",
+  "description": "Architecture-agnostic code auditor agent that sweeps codebases for security vulnerabilities, AI slop (including slopsquatting and hallucinated packages), coding gaps, and loose ends, automatically synthesizing unified diff patches.",
+  "build_command": "npm run build",
+  "start_command": "npm start",
+  "port": 3000,
+  "technologies": [
+    "Next.js 14",
+    "Three.js",
+    "GPGPU GLSL Shaders",
+    "WebGL 2",
+    "TypeScript",
+    "Python 3.12",
+    "FastAPI",
+    "Tree-sitter",
+    "PyPI/npm Registry API"
+  ],
+  "authors": [
+    {
+      "handle": "quagmire49",
+      "role": "Creator"
+    }
+  ]
+}
