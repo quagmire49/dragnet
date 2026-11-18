@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #aa88ff;
+  --text: #dddddd;
+  --muted: #8a8a8a;
+  --chip: #1c1c1c;
+  --line: #2a2a2a;
+  --critical: #FF3B5C;
+  --high: #FF8A3D;
+  --medium: #FFD23D;
+  --low: #3DA9FF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000000;
+  color: var(--text);
+  font-family: "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fixed full-screen UI layer with pointer-events: none */
+.ui-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Text blocks use mix-blend-mode: plus-lighter */
+.blend-lighter {
+  mix-blend-mode: plus-lighter;
+}
+
+/* Opaque cards and panels */
+.opaque-panel {
+  mix-blend-mode: normal;
+  background-color: #0a0a0a;
+}
+
+/* Custom focus ring */
+:focus-visible {
+  outline: 1px solid var(--accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Hide scrollbar for clean cyber-ops look */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(170, 136, 255, 0.6));
+  }
+}
