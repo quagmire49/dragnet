@@ -107,15 +107,15 @@ export default function AxonPage() {
           })}
         </div>
 
-        {/* Card list */}
-        <div className="pointer-events-auto absolute top-[250px] left-6 bottom-0 w-[320px] hidden md:flex flex-col overflow-y-auto no-scrollbar pb-8">
+        {/* Card list - spacious and fully visible */}
+        <div className="pointer-events-auto absolute top-[230px] left-6 bottom-0 w-[350px] lg:w-[380px] hidden md:flex flex-col overflow-y-auto no-scrollbar pb-24 pr-2">
           {CARDS.map((card) => (
             <div
               key={card.id}
-              className="py-[18px] border-t border-[#2a2a2a] first:border-t-0"
+              className="py-[24px] border-t border-[#2a2a2a] first:border-t-0 group cursor-pointer"
             >
-              {/* .thumb: height 160, radius 2, background #0a0a0a, video cover-fitted */}
-              <div className="h-[160px] rounded-[2px] bg-[#0a0a0a] overflow-hidden relative">
+              {/* .thumb: spacious 200px height, radius 3, background #0a0a0a, video cover-fitted */}
+              <div className="h-[200px] rounded-[3px] bg-[#0a0a0a] border border-[#1f1f1f] group-hover:border-[#aa88ff]/50 transition-colors duration-300 overflow-hidden relative shadow-lg">
                 <video
                   src={card.video}
                   autoPlay
@@ -123,13 +123,13 @@ export default function AxonPage() {
                   loop
                   playsInline
                   preload="metadata"
-                  className="w-full h-full object-cover pointer-events-none"
+                  className="w-full h-full object-cover pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
               </div>
 
-              {/* .meta: flex space-between gap 16, margin-top 10, 12 px */}
-              <div className="flex justify-between gap-4 mt-[10px] text-[12px] leading-[1.35] tracking-[0.02em]">
-                <div className="text-white whitespace-pre-line text-left">
+              {/* .meta: flex space-between gap 16, margin-top 14, 12 px */}
+              <div className="flex justify-between items-start gap-4 mt-[14px] text-[12px] leading-[1.4] tracking-[0.02em]">
+                <div className="text-white whitespace-pre-line text-left font-medium group-hover:text-[#aa88ff] transition-colors duration-200">
                   {card.left}
                 </div>
                 <div className="text-[#8a8a8a] whitespace-pre-line text-right">
