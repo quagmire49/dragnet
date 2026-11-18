@@ -9,13 +9,12 @@ export function LandingCards() {
   const { startScan } = useScan();
 
   const renderCodeSnippetThumb = (rule: string, snippet: string) => {
-    // Clean preview lines
     const lines = snippet.split('\n').slice(0, 5);
 
     return (
-      <div className="h-[140px] w-full bg-[#0a0a0a] p-2.5 font-mono text-[10px] leading-[1.3] text-[#ddd] overflow-hidden select-none border-b border-[#2a2a2a]">
-        <div className="text-[9px] text-[#8a8a8a] mb-1 tracking-wider opacity-70">
-          // REPO AST SNIPPET
+      <div className="h-[150px] w-full bg-[#070707] p-3 font-mono text-[11px] leading-[1.35] text-[#ddd] overflow-hidden select-none border-b border-[#222]">
+        <div className="text-[9px] text-[#8a8a8a] mb-1.5 tracking-wider opacity-70">
+          // REPOSITORY AST SNIPPET
         </div>
         {lines.map((line, idx) => {
           let lineContent: React.ReactNode = line;
@@ -63,7 +62,7 @@ export function LandingCards() {
 
           return (
             <div key={idx} className="truncate">
-              <span className="inline-block w-4 text-[#444] select-none text-[9px]">
+              <span className="inline-block w-5 text-[#444] select-none text-[10px]">
                 {idx + 1}
               </span>
               {lineContent}
@@ -76,7 +75,7 @@ export function LandingCards() {
 
   return (
     <div
-      className="pointer-events-auto fixed top-[240px] left-6 w-[320px] hidden md:flex flex-col gap-3 z-20 max-h-[calc(100vh-260px)] overflow-y-auto no-scrollbar pb-8 select-none"
+      className="pointer-events-auto fixed top-[210px] left-6 w-[350px] lg:w-[390px] hidden md:flex flex-col gap-4 z-20 max-h-[calc(100vh-230px)] overflow-y-auto no-scrollbar pb-16 select-none"
       role="region"
       aria-label="Headline audit findings"
     >
@@ -92,34 +91,40 @@ export function LandingCards() {
             key={finding.id}
             type="button"
             onClick={() => startScan()}
-            className="w-full text-left bg-[#0a0a0a] border border-[#2a2a2a] hover:border-[#aa88ff] transition-all group focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#aa88ff] focus-visible:outline-offset-2"
+            className="w-full text-left bg-[#0a0a0a] border border-[#2a2a2a] hover:border-[#aa88ff] transition-all group focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#aa88ff] focus-visible:outline-offset-2 shadow-lg"
+            style={{
+              borderLeftWidth: '3px',
+              borderLeftColor: severityColor,
+            }}
           >
-            {/* 160px syntax colored thumb */}
+            {/* Syntax snippet preview */}
             {renderCodeSnippetThumb(finding.rule, finding.snippet)}
 
-            {/* Two-line .meta pair */}
-            <div className="p-2.5 flex flex-col gap-1 text-[11px] font-mono leading-tight bg-[#0a0a0a]">
-              {/* Line 1: Left white (rule), Right muted (severity) */}
+            {/* Spacious metadata footer */}
+            <div className="p-3.5 flex flex-col gap-1.5 text-[11px] font-mono leading-tight bg-[#0a0a0a]">
+              {/* Line 1: Rule name & severity badge */}
               <div className="flex items-center justify-between">
-                <span className="text-white group-hover:text-[#aa88ff] transition-colors truncate pr-2 font-semibold">
+                <span className="text-white group-hover:text-[#aa88ff] transition-colors truncate pr-2 font-bold text-[12px]">
                   {finding.rule}
                 </span>
                 <span
-                  className="text-[10px] font-mono tracking-wider flex items-center gap-1 shrink-0"
+                  className="text-[10px] font-mono tracking-wider flex items-center gap-1.5 shrink-0 uppercase font-semibold"
                   style={{ color: severityColor }}
                 >
                   <span
-                    className="w-1.5 h-1.5 rounded-full inline-block"
+                    className="w-2 h-2 rounded-full inline-block"
                     style={{ backgroundColor: severityColor }}
                   />
                   {finding.severity}
                 </span>
               </div>
 
-              {/* Line 2: Left white (file), Right muted (category) */}
+              {/* Line 2: File path & category */}
               <div className="flex items-center justify-between text-[#8a8a8a] text-[10px]">
-                <span className="text-[#bbb] truncate pr-2">{finding.file}</span>
-                <span className="shrink-0 uppercase">{finding.category}</span>
+                <span className="text-[#ccc] truncate pr-2">{finding.file}</span>
+                <span className="shrink-0 uppercase bg-[#141414] px-1.5 py-0.5 border border-[#222]">
+                  {finding.category}
+                </span>
               </div>
             </div>
           </button>

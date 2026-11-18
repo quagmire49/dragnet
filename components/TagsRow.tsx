@@ -8,7 +8,7 @@ export function TagsRow() {
 
   return (
     <div
-      className="pointer-events-auto fixed top-[120px] left-6 w-[320px] hidden md:flex flex-wrap gap-1.5 z-20 select-none"
+      className="pointer-events-auto fixed top-[120px] left-6 w-[350px] lg:w-[390px] hidden md:flex flex-wrap gap-1.5 z-20 select-none"
       role="toolbar"
       aria-label="Detector and Language Filters"
     >

@@ -25,7 +25,6 @@ export function LiveFeedCards() {
   // Keyboard navigation: j/k, Enter, /
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if typing in an input
       if (document.activeElement?.tagName === 'INPUT') {
         if (e.key === 'Escape') {
           (document.activeElement as HTMLElement).blur();
@@ -56,7 +55,7 @@ export function LiveFeedCards() {
 
   return (
     <div
-      className="pointer-events-auto fixed top-[180px] left-6 w-[320px] hidden md:flex flex-col gap-2.5 z-20 max-h-[calc(100vh-200px)] overflow-hidden select-none"
+      className="pointer-events-auto fixed top-[180px] left-6 w-[350px] lg:w-[390px] hidden md:flex flex-col gap-3 z-20 max-h-[calc(100vh-200px)] overflow-hidden select-none"
       role="region"
       aria-label="Audit findings feed"
     >
@@ -75,13 +74,13 @@ export function LiveFeedCards() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="SEARCH FINDINGS ( / )"
-              className="w-full bg-[#0a0a0a] border border-[#2a2a2a] text-[#ddd] placeholder-[#666] text-[11px] font-mono px-2 py-1.5 focus:outline-none focus:border-[#aa88ff] uppercase tracking-[.02em]"
+              className="w-full bg-[#0a0a0a] border border-[#2a2a2a] text-[#ddd] placeholder-[#666] text-[11px] font-mono px-3 py-2 focus:outline-none focus:border-[#aa88ff] uppercase tracking-[.02em]"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-1.5 text-[#8a8a8a] hover:text-white text-[10px]"
+                className="absolute right-2.5 top-2 text-[#8a8a8a] hover:text-white text-[10px]"
               >
                 CLEAR
               </button>
@@ -89,15 +88,15 @@ export function LiveFeedCards() {
           </div>
 
           {/* Sort Chip Row */}
-          <div className="flex items-center justify-between text-[10px] text-[#8a8a8a]">
+          <div className="flex items-center justify-between text-[10px] text-[#8a8a8a] px-0.5">
             <span>SORT:</span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {(['risk', 'file', 'category'] as const).map((s) => (
                 <button
                   key={s}
                   type="button"
                   onClick={() => setSortBy(s)}
-                  className={`px-1.5 py-0.5 uppercase font-mono border ${
+                  className={`px-2 py-0.5 uppercase font-mono border transition-colors ${
                     sortBy === s
                       ? 'border-[#aa88ff] text-[#aa88ff] bg-[#1c1c1c]'
                       : 'border-[#2a2a2a] text-[#8a8a8a] hover:text-white'
@@ -111,7 +110,7 @@ export function LiveFeedCards() {
 
           {/* Hotspot filter active indicator */}
           {selectedHotspotFile && (
-            <div className="flex items-center justify-between bg-[#1c1c1c] border border-[#aa88ff] px-2 py-1 text-[10px] text-[#aa88ff]">
+            <div className="flex items-center justify-between bg-[#1c1c1c] border border-[#aa88ff] px-2.5 py-1 text-[10px] text-[#aa88ff]">
               <span className="truncate">FILTER: {selectedHotspotFile}</span>
               <button
                 type="button"
@@ -135,10 +134,10 @@ export function LiveFeedCards() {
       </div>
 
       {/* Scrollable list */}
-      <div className="flex flex-col gap-2 overflow-y-auto no-scrollbar pb-8 pr-1">
+      <div className="flex flex-col gap-2.5 overflow-y-auto no-scrollbar pb-12 pr-1">
         {visibleFindings.length === 0 && (
-          <div className="bg-[#0a0a0a] border border-[#2a2a2a] p-3 text-[11px] text-[#8a8a8a] text-center">
-            {status === 'scanning' ? 'AUDITING REPO AST...' : 'NO FINDINGS MATCH FILTER'}
+          <div className="bg-[#0a0a0a] border border-[#2a2a2a] p-4 text-[11px] text-[#8a8a8a] text-center">
+            {status === 'scanning' ? 'AUDITING REPOSITORY AST...' : 'NO FINDINGS MATCH FILTER'}
           </div>
         )}
 
@@ -156,24 +155,24 @@ export function LiveFeedCards() {
                 setFocusedIndex(index);
                 setActiveFinding(finding);
               }}
-              className={`w-full text-left bg-[#0a0a0a] border border-[#2a2a2a] p-2.5 transition-all cursor-pointer font-mono select-none relative
+              className={`w-full text-left bg-[#0a0a0a] border border-[#2a2a2a] p-3.5 transition-all cursor-pointer font-mono select-none relative shadow-md
                 ${isSelected ? 'border-[#aa88ff] bg-[#141418]' : 'hover:border-[#444]'}
                 ${isFocused ? 'ring-1 ring-[#aa88ff]' : ''}
               `}
               style={{
-                borderLeftWidth: '2px',
+                borderLeftWidth: '3px',
                 borderLeftColor: severityColor,
                 animation: 'fadeSlideIn 250ms ease-out both',
-                animationDelay: `${Math.min(index * 40, 400)}ms`,
+                animationDelay: `${Math.min(index * 30, 300)}ms`,
               }}
             >
               {/* Line 1: Left rule, right severity dot + word */}
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-white text-[11px] font-semibold truncate pr-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-white text-[12px] font-bold truncate pr-2">
                   {finding.rule}
                 </span>
                 <span
-                  className="text-[10px] font-mono tracking-wider flex items-center gap-1 shrink-0"
+                  className="text-[10px] font-mono tracking-wider flex items-center gap-1.5 shrink-0 uppercase font-semibold"
                   style={{ color: severityColor }}
                 >
                   <span
@@ -185,18 +184,24 @@ export function LiveFeedCards() {
               </div>
 
               {/* Title summary */}
-              <div className="text-[11px] text-[#ddd] truncate mb-1 opacity-90">
+              <div className="text-[11px] text-[#ddd] truncate mb-2 opacity-95">
                 {finding.title}
               </div>
 
               {/* Line 2: File:line and category */}
               <div className="flex items-center justify-between text-[#8a8a8a] text-[10px]">
-                <span className="truncate pr-2">
+                <span className="truncate pr-2 text-[#bbb]">
                   {finding.file}:{finding.line_start}
                 </span>
                 <div className="flex items-center gap-1.5 shrink-0">
-                  {isApplied && <span className="text-[#cfe8c0] text-[9px]">[FIXED]</span>}
-                  <span className="uppercase">{finding.category}</span>
+                  {isApplied && (
+                    <span className="text-[#cfe8c0] text-[9px] bg-[#0f1a0b] px-1 py-0.5 border border-[#1f3a1b]">
+                      [FIXED]
+                    </span>
+                  )}
+                  <span className="uppercase bg-[#141414] px-1.5 py-0.5 border border-[#222]">
+                    {finding.category}
+                  </span>
                 </div>
               </div>
             </button>
